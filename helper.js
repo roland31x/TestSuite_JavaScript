@@ -2228,3 +2228,290 @@ export function capitalizeAndTrim_349(str) {
 export function removeDuplicates_350(arr) {
   return arr.filter((item, index) => arr.indexOf(item) === index);
 }
+
+export function flattenArray_351(arr) {
+  return arr.reduce((flat, toFlatten) => flat.concat(Array.isArray(toFlatten) ? flattenArray_351(toFlatten) : toFlatten), []);
+}
+
+export function chunkArray_352(arr, size) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+
+export function arraySum_353(arr) {
+  return arr.reduce((sum, val) => sum + val, 0);
+}
+
+export function arrayProduct_354(arr) {
+  return arr.reduce((prod, val) => prod * val, 1);
+}
+
+export function isSortedAsc_355(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] < arr[i - 1]) return false;
+  }
+  return true;
+}
+
+export function isSortedDesc_356(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > arr[i - 1]) return false;
+  }
+  return true;
+}
+
+export function capitalizeWords_357(str) {
+  return str.replace(/\b\w/g, c => c.toUpperCase());
+}
+
+export function slugify_358(str) {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function sumBy_359(arr, fn) {
+  return arr.reduce((acc, val) => acc + fn(val), 0);
+}
+
+export function deepMerge_360(target, source) {
+  for (const key in source) {
+    if (source[key] instanceof Object && key in target) {
+      Object.assign(source[key], deepMerge(target[key], source[key]));
+    }
+  }
+  return { ...target, ...source };
+}
+
+export function randomInt_361(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function groupBy_362(array, key) {
+  return array.reduce((result, currentValue) => {
+    (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
+    return result;
+  }, {});
+}
+
+export function clamp_363(num, min, max) {
+  return Math.min(Math.max(num, min), max);
+}
+
+export function isObject_364(obj) {
+  return obj && typeof obj === 'object' && !Array.isArray(obj);
+}
+
+export function pick_365(obj, keys) {
+  return keys.reduce((acc, key) => {
+    if (key in obj) acc[key] = obj[key];
+    return acc;
+  }, {});
+}
+
+export function omit_366(obj, keys) {
+  return Object.keys(obj)
+    .filter(key => !keys.includes(key))
+    .reduce((acc, key) => {
+      acc[key] = obj[key];
+      return acc;
+    }, {});
+}
+
+export function xorArrays_367(arr1, arr2) {
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+  return [...arr1.filter(x => !set2.has(x)), ...arr2.filter(x => !set1.has(x))];
+}
+
+export function countOccurrences_368(arr, val) {
+  return arr.reduce((count, elem) => (elem === val ? count + 1 : count), 0);
+}
+
+export function uniqueBy_369(arr, fn) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = fn(item);
+    return seen.has(key) ? false : seen.add(key);
+  });
+}
+
+export function capitalizeLast_370(str) {
+  if (!str) return '';
+  return str.slice(0, -1) + str.slice(-1).toUpperCase();
+}
+
+export function swapCase_371(str) {
+  return str
+    .split('')
+    .map(c => (c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()))
+    .join('');
+}
+
+export function mergeObjects_372(...objs) {
+  return Object.assign({}, ...objs);
+}
+
+export function sleep_373(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function hexToRgb_374(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+}
+
+export function rgbToHex_375(r, g, b) {
+  return (
+    '#' +
+    [r, g, b]
+      .map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      })
+      .join('')
+  );
+}
+
+export function pluralize_376(word, count) {
+  return count === 1 ? word : word + 's';
+}
+
+export function factorialRecursive_377(n) {
+  return n <= 1 ? 1 : n * factorialRecursive_377(n - 1);
+}
+
+export function fibonacciRecursive_378(n) {
+  return n <= 1 ? n : fibonacciRecursive_378(n - 1) + fibonacciRecursive_378(n - 2);
+}
+
+export function capitalizeAlternating_379(str) {
+  return str
+    .split('')
+    .map((c, i) => (i % 2 === 0 ? c.toUpperCase() : c.toLowerCase()))
+    .join('');
+}
+
+export function reverseWords_380(str) {
+  return str.split(' ').reverse().join(' ');
+}
+
+export function randomString_381(length) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+export function getType_382(value) {
+  return Object.prototype.toString.call(value).slice(8, -1);
+}
+
+export function safeParseJSON_383(str) {
+  try {
+    return JSON.parse(str);
+  } catch {
+    return null;
+  }
+}
+
+export function flattenDeep_384(arr) {
+  return arr.reduce((acc, val) => (Array.isArray(val) ? acc.concat(flattenDeep_384(val)) : acc.concat(val)), []);
+}
+
+export function lastElement_385(arr) {
+  return arr[arr.length - 1];
+}
+
+export function firstElement_386(arr) {
+  return arr[0];
+}
+
+export function removeDuplicatesBy_387(arr, fn) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = fn(item);
+    return seen.has(key) ? false : seen.add(key);
+  });
+}
+
+export function toArray_388(value) {
+  if (value == null) return [];
+  if (Array.isArray(value)) return value;
+  return [value];
+}
+
+export function toNumber_389(value) {
+  const num = Number(value);
+  return isNaN(num) ? null : num;
+}
+
+export function toBoolean_390(value) {
+  if (typeof value === 'string') {
+    const val = value.toLowerCase();
+    if (val === 'true') return true;
+    if (val === 'false') return false;
+  }
+  return Boolean(value);
+}
+
+export function objectKeys_391(obj) {
+  return Object.keys(obj);
+}
+
+export function objectValues_392(obj) {
+  return Object.values(obj);
+}
+
+export function objectEntries_393(obj) {
+  return Object.entries(obj);
+}
+
+export function safeGet_394(obj, path) {
+  return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj);
+}
+
+export function arrayMove_395(arr, fromIndex, toIndex) {
+  const newArr = [...arr];
+  const element = newArr.splice(fromIndex, 1)[0];
+  newArr.splice(toIndex, 0, element);
+  return newArr;
+}
+
+export function randomElement_396(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function xor_397(a, b) {
+  return !!(a ^ b);
+}
+
+export function isEven_398(num) {
+  return num % 2 === 0;
+}
+
+export function isOdd_399(num) {
+  return num % 2 !== 0;
+}
+
+export function sumRange_400(start, end) {
+  let sum = 0;
+  for (let i = start; i <= end; i++) {
+    sum += i;
+  }
+  return sum;
+}
