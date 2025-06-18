@@ -873,3 +873,298 @@ export function flattenAndSort_149(arr) {
 export function countOccurrences_150(arr, val) {
   return arr.reduce((count, v) => (v === val ? count + 1 : count), 0);
 }
+
+export function mapObject_151(obj, fn) {
+  return Object.fromEntries(
+    Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)])
+  );
+}
+
+export function invertObject_152(obj) {
+  return Object.entries(obj).reduce((acc, [k, v]) => {
+    acc[v] = k;
+    return acc;
+  }, {});
+}
+
+export function clampArrayValues_153(arr, min, max) {
+  return arr.map(n => Math.min(Math.max(n, min), max));
+}
+
+export function allUnique_154(arr) {
+  return new Set(arr).size === arr.length;
+}
+
+export function differenceBy_155(arr1, arr2, fn) {
+  const set = new Set(arr2.map(fn));
+  return arr1.filter(x => !set.has(fn(x)));
+}
+
+export function intersectionBy_156(arr1, arr2, fn) {
+  const set = new Set(arr2.map(fn));
+  return arr1.filter(x => set.has(fn(x)));
+}
+
+export function groupBy_157(arr, fn) {
+  return arr.reduce((acc, item) => {
+    const key = fn(item);
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {});
+}
+
+export function chunkArray_158(arr, size) {
+  const result = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
+
+export function randomChoice_159(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function lastIndex_160(arr) {
+  return arr.length - 1;
+}
+
+export function arraySumBy_161(arr, fn) {
+  return arr.reduce((acc, val) => acc + fn(val), 0);
+}
+
+export function isSortedAsc_162(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] < arr[i - 1]) return false;
+  }
+  return true;
+}
+
+export function isSortedDesc_163(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > arr[i - 1]) return false;
+  }
+  return true;
+}
+
+export function countBy_164(arr, fn) {
+  return arr.reduce((acc, item) => {
+    const key = fn(item);
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+export function deepEqual_165(a, b) {
+  if (a === b) return true;
+
+  if (typeof a !== typeof b) return false;
+
+  if (a && b && typeof a === 'object') {
+    if (Array.isArray(a) !== Array.isArray(b)) return false;
+
+    if (Array.isArray(a)) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+        if (!deepEqual_165(a[i], b[i])) return false;
+      }
+      return true;
+    } else {
+      const keysA = Object.keys(a);
+      const keysB = Object.keys(b);
+      if (keysA.length !== keysB.length) return false;
+      for (let key of keysA) {
+        if (!deepEqual_165(a[key], b[key])) return false;
+      }
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function uniqueObjects_166(arr, fn) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = fn(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export function objectToPairs_167(obj) {
+  return Object.entries(obj);
+}
+
+export function pairsToObject_168(pairs) {
+  return Object.fromEntries(pairs);
+}
+
+export function isInteger_169(value) {
+  return Number.isInteger(value);
+}
+
+export function isFloat_170(value) {
+  return Number(value) === value && !Number.isInteger(value);
+}
+
+export function clampNumber_171(num, min, max) {
+  return Math.min(Math.max(num, min), max);
+}
+
+export function capitalizeWords_172(str) {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+export function flattenDeep_173(arr) {
+  return arr.reduce(
+    (acc, val) => acc.concat(Array.isArray(val) ? flattenDeep_173(val) : val),
+    []
+  );
+}
+
+export function kebabToCamel_174(str) {
+  return str.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+}
+
+export function camelToKebab_175(str) {
+  return str.replace(/[A-Z]/g, char => '-' + char.toLowerCase());
+}
+
+export function arrayMax_176(arr) {
+  return Math.max(...arr);
+}
+
+export function arrayMin_177(arr) {
+  return Math.min(...arr);
+}
+
+export function repeatStr_178(str, n) {
+  return str.repeat(n);
+}
+
+export function generateRange_179(start, end) {
+  const arr = [];
+  for (let i = start; i <= end; i++) arr.push(i);
+  return arr;
+}
+
+export function delayPromise_180(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function arrayToObject_181(arr, keyFn, valueFn = x => x) {
+  return arr.reduce((acc, item) => {
+    acc[keyFn(item)] = valueFn(item);
+    return acc;
+  }, {});
+}
+
+export function objectMap_182(obj, fn) {
+  return Object.fromEntries(
+    Object.entries(obj).map(([k, v]) => [k, fn(v, k)])
+  );
+}
+
+export function pickKeys_183(obj, keys) {
+  return keys.reduce((acc, key) => {
+    if (key in obj) acc[key] = obj[key];
+    return acc;
+  }, {});
+}
+
+export function omitKeys_184(obj, keys) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k]) => !keys.includes(k))
+  );
+}
+
+export function snakeToCamel_185(str) {
+  return str.replace(/(_\w)/g, m => m[1].toUpperCase());
+}
+
+export function camelToSnake_186(str) {
+  return str.replace(/[A-Z]/g, c => '_' + c.toLowerCase());
+}
+
+export function sortByKey_187(arr, key) {
+  return [...arr].sort((a, b) => {
+    if (a[key] < b[key]) return -1;
+    if (a[key] > b[key]) return 1;
+    return 0;
+  });
+}
+
+export function sortByFn_188(arr, fn) {
+  return [...arr].sort((a, b) => fn(a) - fn(b));
+}
+
+export function distinct_189(arr) {
+  return [...new Set(arr)];
+}
+
+export function groupByProp_190(arr, prop) {
+  return arr.reduce((acc, obj) => {
+    const key = obj[prop];
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(obj);
+    return acc;
+  }, {});
+}
+
+export function randomFloat_191(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+export function randomIntInclusive_192(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function sumByKey_193(arr, key) {
+  return arr.reduce((acc, obj) => acc + (obj[key] || 0), 0);
+}
+
+export function isFunction_194(value) {
+  return typeof value === 'function';
+}
+
+export function delayFunc_195(fn, ms) {
+  return function(...args) {
+    setTimeout(() => fn.apply(this, args), ms);
+  };
+}
+
+export function mergeWithoutOverwrite_196(target, source) {
+  for (const key in source) {
+    if (!(key in target)) {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+export function jsonSafeParse_197(str, fallback = null) {
+  try {
+    return JSON.parse(str);
+  } catch {
+    return fallback;
+  }
+}
+
+export function jsonSafeStringify_198(obj, fallback = '') {
+  try {
+    return JSON.stringify(obj);
+  } catch {
+    return fallback;
+  }
+}
+
+export function isTruthy_199(value) {
+  return !!value;
+}
+
+export function isFalsy_200(value) {
+  return !value;
+}
