@@ -1168,3 +1168,393 @@ export function isTruthy_199(value) {
 export function isFalsy_200(value) {
   return !value;
 }
+
+export function debounce_201(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+export function throttle_202(fn, limit) {
+  let inThrottle;
+  return function(...args) {
+    if (!inThrottle) {
+      fn.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+}
+
+export function memoize_203(fn) {
+  const cache = new Map();
+  return function(...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+export function deepClone_204(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export function flattenOnce_205(arr) {
+  return [].concat(...arr);
+}
+
+export function arrayDifference_206(arr1, arr2) {
+  return arr1.filter(x => !arr2.includes(x));
+}
+
+export function arrayIntersection_207(arr1, arr2) {
+  return arr1.filter(x => arr2.includes(x));
+}
+
+export function rangeStep_208(start, stop, step = 1) {
+  const arr = [];
+  if (step === 0) throw new Error('Step cannot be zero.');
+  if (start < stop) {
+    for (let i = start; i <= stop; i += step) arr.push(i);
+  } else {
+    for (let i = start; i >= stop; i -= step) arr.push(i);
+  }
+  return arr;
+}
+
+export function randomHexColor_209() {
+  return '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
+}
+
+export function capitalizeFirst_210(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function trimAllWhitespace_211(str) {
+  return str.replace(/\s+/g, '');
+}
+
+export function isEmpty_212(value) {
+  if (value == null) return true;
+  if (Array.isArray(value) || typeof value === 'string') return value.length === 0;
+  if (typeof value === 'object') return Object.keys(value).length === 0;
+  return false;
+}
+
+export function uniqueBy_213(arr, fn) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = fn(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export function partition_214(arr, fn) {
+  return arr.reduce(
+    ([pass, fail], elem) => {
+      return fn(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]];
+    },
+    [[], []]
+  );
+}
+
+export function chunk_215(arr, size) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+
+export function pickRandom_216(arr, n = 1) {
+  const copy = [...arr];
+  const result = [];
+  for (let i = 0; i < n && copy.length; i++) {
+    const idx = Math.floor(Math.random() * copy.length);
+    result.push(copy.splice(idx, 1)[0]);
+  }
+  return n === 1 ? result[0] : result;
+}
+
+export function objectValues_217(obj) {
+  return Object.values(obj);
+}
+
+export function objectKeys_218(obj) {
+  return Object.keys(obj);
+}
+
+export function isPalindrome_219(str) {
+  const s = str.toLowerCase().replace(/[\W_]/g, '');
+  return s === s.split('').reverse().join('');
+}
+
+export function hexToRgb_220(hex) {
+  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  hex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+}
+
+export function rgbToHex_221(r, g, b) {
+  return (
+    '#' +
+    [r, g, b]
+      .map(x => {
+        const hex = x.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+      })
+      .join('')
+  );
+}
+
+export function isPrime_222(n) {
+  if (n <= 1) return false;
+  if (n <= 3) return true;
+  if (n % 2 === 0 || n % 3 === 0) return false;
+  for (let i = 5; i * i <= n; i += 6) {
+    if (n % i === 0 || n % (i + 2) === 0) return false;
+  }
+  return true;
+}
+
+export function factorial_223(n) {
+  if (n < 0) return undefined;
+  if (n === 0) return 1;
+  let res = 1;
+  for (let i = 1; i <= n; i++) res *= i;
+  return res;
+}
+
+export function fibonacci_224(n) {
+  if (n <= 0) return 0;
+  if (n === 1) return 1;
+  let a = 0,
+    b = 1,
+    temp;
+  for (let i = 2; i <= n; i++) {
+    temp = a + b;
+    a = b;
+    b = temp;
+  }
+  return b;
+}
+
+export function arrayRotate_225(arr, count) {
+  const len = arr.length;
+  const rotation = ((count % len) + len) % len;
+  return arr.slice(rotation).concat(arr.slice(0, rotation));
+}
+
+export function arrayShuffle_226(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+export function sumRange_227(start, end) {
+  let sum = 0;
+  const min = Math.min(start, end);
+  const max = Math.max(start, end);
+  for (let i = min; i <= max; i++) sum += i;
+  return sum;
+}
+
+export function uniqueChars_228(str) {
+  return [...new Set(str)].join('');
+}
+
+export function repeatArray_229(arr, times) {
+  let result = [];
+  for (let i = 0; i < times; i++) {
+    result = result.concat(arr);
+  }
+  return result;
+}
+
+export function isAnagram_230(str1, str2) {
+  const normalize = s => s.toLowerCase().replace(/\W/g, '').split('').sort().join('');
+  return normalize(str1) === normalize(str2);
+}
+
+export function binarySearch_231(arr, target) {
+  let low = 0,
+    high = arr.length - 1;
+  while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    if (arr[mid] === target) return mid;
+    else if (arr[mid] < target) low = mid + 1;
+    else high = mid - 1;
+  }
+  return -1;
+}
+
+export function zipArrays_232(...arrays) {
+  const length = Math.min(...arrays.map(arr => arr.length));
+  const result = [];
+  for (let i = 0; i < length; i++) {
+    result.push(arrays.map(arr => arr[i]));
+  }
+  return result;
+}
+
+export function unzipArrays_233(arrays) {
+  const length = arrays[0]?.length || 0;
+  const result = Array.from({ length }, () => []);
+  arrays.forEach(arr => {
+    arr.forEach((val, i) => result[i].push(val));
+  });
+  return result;
+}
+
+export function flattenObject_234(obj, prefix = '') {
+  return Object.keys(obj).reduce((acc, k) => {
+    const pre = prefix.length ? prefix + '.' : '';
+    if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
+      Object.assign(acc, flattenObject_234(obj[k], pre + k));
+    } else {
+      acc[pre + k] = obj[k];
+    }
+    return acc;
+  }, {});
+}
+
+export function unflattenObject_235(data) {
+  const result = {};
+  for (const i in data) {
+    const keys = i.split('.');
+    keys.reduce((r, e, j) => {
+      return (
+        r[e] ||
+        (r[e] = isNaN(Number(keys[j + 1]))
+          ? keys.length - 1 === j
+            ? data[i]
+            : {}
+          : [])
+      );
+    }, result);
+  }
+  return result;
+}
+
+export function escapeRegExp_236(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function isValidEmail_237(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+export function isValidUrl_238(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function toTitleCase_239(str) {
+  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
+
+export function groupByMultiple_240(arr, keys) {
+  return arr.reduce((acc, obj) => {
+    const key = keys.map(k => obj[k]).join('|');
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(obj);
+    return acc;
+  }, {});
+}
+
+export function deepFreeze_241(obj) {
+  Object.freeze(obj);
+  Object.getOwnPropertyNames(obj).forEach(prop => {
+    if (
+      obj[prop] !== null &&
+      (typeof obj[prop] === 'object' || typeof obj[prop] === 'function') &&
+      !Object.isFrozen(obj[prop])
+    ) {
+      deepFreeze_241(obj[prop]);
+    }
+  });
+  return obj;
+}
+
+export function sleep_242(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function parseQueryString_243(query) {
+  return query
+    .replace(/^\?/, '')
+    .split('&')
+    .reduce((acc, part) => {
+      const [key, val] = part.split('=');
+      acc[decodeURIComponent(key)] = decodeURIComponent(val || '');
+      return acc;
+    }, {});
+}
+
+export function buildQueryString_244(params) {
+  return Object.entries(params)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('&');
+}
+
+export function isObject_245(value) {
+  return value && typeof value === 'object' && !Array.isArray(value);
+}
+
+export function isArray_246(value) {
+  return Array.isArray(value);
+}
+
+export function mergeDeep_247(target, source) {
+  for (const key in source) {
+    if (isObject(source[key])) {
+      if (!target[key]) Object.assign(target, { [key]: {} });
+      mergeDeep_247(target[key], source[key]);
+    } else {
+      Object.assign(target, { [key]: source[key] });
+    }
+  }
+  return target;
+}
+
+export function uniqueByProp_248(arr, prop) {
+  const seen = new Set();
+  return arr.filter(item => {
+    if (seen.has(item[prop])) return false;
+    seen.add(item[prop]);
+    return true;
+  });
+}
+
+export function arrayMove_249(arr, fromIndex, toIndex) {
+  const a = [...arr];
+  const element = a.splice(fromIndex, 1)[0];
+  a.splice(toIndex, 0, element);
+  return a;
+}
+
+export function omitBy_250(obj, predicate) {
+  return Object.fromEntries(Object.entries(obj).filter(([k, v]) => !predicate(v, k)));
+}
