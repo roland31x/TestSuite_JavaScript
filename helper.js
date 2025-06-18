@@ -2926,3 +2926,471 @@ export function pickBy_450(obj, predicate) {
     Object.entries(obj).filter(([k, v]) => predicate(v, k))
   );
 }
+
+export function partition_451(arr, predicate) {
+  return arr.reduce(
+    (acc, val) => {
+      acc[predicate(val) ? 0 : 1].push(val);
+      return acc;
+    },
+    [[], []]
+  );
+}
+
+export function zip_452(...arrays) {
+  const length = Math.min(...arrays.map(arr => arr.length));
+  const result = [];
+  for (let i = 0; i < length; i++) {
+    result.push(arrays.map(arr => arr[i]));
+  }
+  return result;
+}
+
+export function unzip_453(arrays) {
+  if (arrays.length === 0) return [];
+  const length = Math.max(...arrays.map(arr => arr.length));
+  const result = [];
+  for (let i = 0; i < length; i++) {
+    result.push(arrays.map(arr => arr[i]));
+  }
+  return result;
+}
+
+export function intersection_454(...arrays) {
+  return arrays.reduce((acc, arr) => acc.filter(x => arr.includes(x)));
+}
+
+export function union_455(...arrays) {
+  return [...new Set(arrays.flat())];
+}
+
+export function sum_456(arr) {
+  return arr.reduce((acc, val) => acc + val, 0);
+}
+
+export function average_457(arr) {
+  return arr.length === 0 ? 0 : sum_456(arr) / arr.length;
+}
+
+export function isEmpty_458(obj) {
+  if (obj == null) return true;
+  if (Array.isArray(obj) || typeof obj === 'string') return obj.length === 0;
+  return Object.keys(obj).length === 0;
+}
+
+export function groupBy_459(arr, fn) {
+  return arr.reduce((acc, val) => {
+    const key = fn(val);
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(val);
+    return acc;
+  }, {});
+}
+
+export function sortBy_460(arr, fn) {
+  return arr.slice().sort((a, b) => {
+    const valA = fn(a);
+    const valB = fn(b);
+    if (valA < valB) return -1;
+    if (valA > valB) return 1;
+    return 0;
+  });
+}
+
+export function debounceLeading_461(fn, delay) {
+  let timer = null;
+  return function (...args) {
+    if (!timer) fn.apply(this, args);
+    clearTimeout(timer);
+    timer = setTimeout(() => (timer = null), delay);
+  };
+}
+
+export function deepFreeze_462(obj) {
+  Object.freeze(obj);
+  Object.getOwnPropertyNames(obj).forEach(prop => {
+    if (
+      obj[prop] !== null &&
+      (typeof obj[prop] === 'object' || typeof obj[prop] === 'function') &&
+      !Object.isFrozen(obj[prop])
+    ) {
+      deepFreeze_462(obj[prop]);
+    }
+  });
+  return obj;
+}
+
+export function sleep_463(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function escapeRegExp_464(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function slugify_465(str) {
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\W-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+export function shuffle_466(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+export function flattenDeep_467(arr) {
+  return arr.reduce(
+    (acc, val) => acc.concat(Array.isArray(val) ? flattenDeep_467(val) : val),
+    []
+  );
+}
+
+export function pick_468(obj, keys) {
+  return keys.reduce((acc, key) => {
+    if (key in obj) acc[key] = obj[key];
+    return acc;
+  }, {});
+}
+
+export function omit_469(obj, keys) {
+  return Object.keys(obj).reduce((acc, key) => {
+    if (!keys.includes(key)) acc[key] = obj[key];
+    return acc;
+  }, {});
+}
+
+export function camelCase_470(str) {
+  return str
+    .replace(/[-_ ]+(\w)/g, (_, c) => (c ? c.toUpperCase() : ''))
+    .replace(/^\w/, c => c.toLowerCase());
+}
+
+export function pascalCase_471(str) {
+  return str
+    .replace(/(^\w|[-_ ]+\w)/g, match => match.replace(/[-_ ]+/g, '').toUpperCase());
+}
+
+export function snakeCase_472(str) {
+  return str
+    .replace(/\W+/g, ' ')
+    .trim()
+    .toLowerCase()
+    .replace(/ /g, '_');
+}
+
+export function kebabCase_473(str) {
+  return str
+    .replace(/\W+/g, ' ')
+    .trim()
+    .toLowerCase()
+    .replace(/ /g, '-');
+}
+
+export function rangeStep_474(start, end, step = 1) {
+  const result = [];
+  if (step === 0) throw new Error('Step cannot be zero');
+  if (start <= end) {
+    for (let i = start; i <= end; i += step) result.push(i);
+  } else {
+    for (let i = start; i >= end; i -= step) result.push(i);
+  }
+  return result;
+}
+
+export function memoize_475(fn) {
+  const cache = new Map();
+  return function (...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+export function retry_476(fn, retries = 3, delay = 1000) {
+  return new Promise((resolve, reject) => {
+    function attempt() {
+      Promise.resolve(fn())
+        .then(resolve)
+        .catch(err => {
+          if (retries === 0) reject(err);
+          else {
+            retries--;
+            setTimeout(attempt, delay);
+          }
+        });
+    }
+    attempt();
+  });
+}
+
+export function isSorted_477(arr, comparator = (a, b) => a <= b) {
+  for (let i = 1; i < arr.length; i++) {
+    if (!comparator(arr[i - 1], arr[i])) return false;
+  }
+  return true;
+}
+
+export function removeDuplicates_478(arr) {
+  return [...new Set(arr)];
+}
+
+export function clamp_479(num, min, max) {
+  return Math.min(Math.max(num, min), max);
+}
+
+export function toTitleCase_480(str) {
+  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+}
+
+export function debouncePromise_481(fn, delay) {
+  let timer = null;
+  let resolveQueue = [];
+  return function (...args) {
+    return new Promise(resolve => {
+      resolveQueue.push(resolve);
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        const result = fn.apply(this, args);
+        resolveQueue.forEach(r => r(result));
+        resolveQueue = [];
+      }, delay);
+    });
+  };
+}
+
+export function curry_482(fn) {
+  return function curried(...args) {
+    if (args.length >= fn.length) {
+      return fn.apply(this, args);
+    }
+    return function (...next) {
+      return curried.apply(this, args.concat(next));
+    };
+  };
+}
+
+export function debounceLeadingTrailing_483(fn, delay) {
+  let timer = null;
+  let lastCall = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastCall > delay) {
+      fn.apply(this, args);
+      lastCall = now;
+    }
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      if (Date.now() - lastCall >= delay) {
+        fn.apply(this, args);
+        lastCall = Date.now();
+      }
+    }, delay);
+  };
+}
+
+export function groupByKey_484(arr, key) {
+  return arr.reduce((acc, obj) => {
+    const value = obj[key];
+    if (!acc[value]) acc[value] = [];
+    acc[value].push(obj);
+    return acc;
+  }, {});
+}
+
+export function distinctBy_485(arr, fn) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = fn(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export function median_486(arr) {
+  if (arr.length === 0) return null;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 !== 0) return sorted[mid];
+  return (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+export function throttleLeadingTrailing_487(fn, delay) {
+  let lastCall = 0;
+  let timer = null;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastCall >= delay) {
+      fn.apply(this, args);
+      lastCall = now;
+    } else {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn.apply(this, args);
+        lastCall = Date.now();
+      }, delay - (now - lastCall));
+    }
+  };
+}
+
+export function chunk_488(arr, size) {
+  if (size <= 0) throw new Error('Size must be positive');
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+
+export function findLast_489(arr, fn) {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (fn(arr[i], i, arr)) return arr[i];
+  }
+  return undefined;
+}
+
+export function toPairs_490(obj) {
+  return Object.entries(obj);
+}
+
+export function fromPairs_491(pairs) {
+  return Object.fromEntries(pairs);
+}
+
+export function uniqueBy_492(arr, fn) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = fn(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export function randomElement_493(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function removeDuplicatesBy_494(arr, fn) {
+  const seen = new Set();
+  return arr.filter(item => {
+    const key = fn(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+export function zipObject_495(keys, values) {
+  const result = {};
+  for (let i = 0; i < Math.min(keys.length, values.length); i++) {
+    result[keys[i]] = values[i];
+  }
+  return result;
+}
+
+export function debounceAsync_496(fn, delay) {
+  let timer;
+  let promise;
+  return function (...args) {
+    clearTimeout(timer);
+    if (!promise) {
+      promise = new Promise(resolve => {
+        timer = setTimeout(() => {
+          promise = null;
+          resolve(fn.apply(this, args));
+        }, delay);
+      });
+    }
+    return promise;
+  };
+}
+
+export function formatBytes_497(bytes, decimals = 2) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+export function isValidJSON_498(str) {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function toCamelCase_499(str) {
+  return str
+    .replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
+    .replace(/^./, c => c.toLowerCase());
+}
+
+export function toSnakeCase_500(str) {
+  return str
+    .replace(/\W+/g, ' ')
+    .trim()
+    .toLowerCase()
+    .replace(/ /g, '_');
+}
+
+export function generateMaze(width, height) {
+  // Initialize grid with walls (true = wall, false = path)
+  const maze = Array.from({ length: height }, () =>
+    Array(width).fill(true)
+  );
+
+  // Directions: Up, Right, Down, Left
+  const directions = [
+    [-2, 0],
+    [0, 2],
+    [2, 0],
+    [0, -2],
+  ];
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function isInBounds(x, y) {
+    return x >= 0 && x < width && y >= 0 && y < height;
+  }
+
+  function carve(x, y) {
+    maze[y][x] = false; // Mark current cell as path
+
+    shuffle(directions);
+
+    for (const [dx, dy] of directions) {
+      const nx = x + dx;
+      const ny = y + dy;
+
+      if (isInBounds(nx, ny) && maze[ny][nx]) {
+        // Remove wall between current and next cell
+        maze[y + dy / 2][x + dx / 2] = false;
+        carve(nx, ny);
+      }
+    }
+  }
+
+  // Start carving from (1,1) to keep outer walls intact
+  carve(1, 1);
+
+  return maze; // 2D array with true = wall, false = path
+}
