@@ -2515,3 +2515,414 @@ export function sumRange_400(start, end) {
   }
   return sum;
 }
+
+export function median_401(arr) {
+  if (arr.length === 0) return null;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0
+    ? sorted[mid]
+    : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+export function mode_402(arr) {
+  const frequency = {};
+  let maxFreq = 0;
+  let modes = [];
+  for (const val of arr) {
+    frequency[val] = (frequency[val] || 0) + 1;
+    if (frequency[val] > maxFreq) {
+      maxFreq = frequency[val];
+    }
+  }
+  for (const key in frequency) {
+    if (frequency[key] === maxFreq) modes.push(key);
+  }
+  return modes;
+}
+
+export function debounce_403(fn, delay) {
+  let timer = null;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+export function throttle_404(fn, limit) {
+  let lastFunc;
+  let lastRan;
+  return function (...args) {
+    if (!lastRan) {
+      fn.apply(this, args);
+      lastRan = Date.now();
+    } else {
+      clearTimeout(lastFunc);
+      lastFunc = setTimeout(() => {
+        if (Date.now() - lastRan >= limit) {
+          fn.apply(this, args);
+          lastRan = Date.now();
+        }
+      }, limit - (Date.now() - lastRan));
+    }
+  };
+}
+
+export function invertObject_405(obj) {
+  return Object.entries(obj).reduce((acc, [key, val]) => {
+    acc[val] = key;
+    return acc;
+  }, {});
+}
+
+export function range_406(start, end, step = 1) {
+  const result = [];
+  if (step === 0) throw new Error('Step cannot be 0');
+  if (start <= end) {
+    for (let i = start; i <= end; i += step) result.push(i);
+  } else {
+    for (let i = start; i >= end; i -= step) result.push(i);
+  }
+  return result;
+}
+
+export function isPalindrome_407(str) {
+  const clean = str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return clean === clean.split('').reverse().join('');
+}
+
+export function capitalizeFirst_408(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function truncate_409(str, maxLength) {
+  if (str.length <= maxLength) return str;
+  return str.slice(0, maxLength) + '...';
+}
+
+export function deepClone_410(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export function mergeDeep_411(target, source) {
+  const isObject = obj => obj && typeof obj === 'object';
+  if (!isObject(target) || !isObject(source)) return source;
+
+  Object.keys(source).forEach(key => {
+    const targetValue = target[key];
+    const sourceValue = source[key];
+    if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+      target[key] = targetValue.concat(sourceValue);
+    } else if (isObject(targetValue) && isObject(sourceValue)) {
+      target[key] = mergeDeep(Object.assign({}, targetValue), sourceValue);
+    } else {
+      target[key] = sourceValue;
+    }
+  });
+  return target;
+}
+
+export function sumDigits_412(num) {
+  return Math.abs(num)
+    .toString()
+    .split('')
+    .reduce((sum, digit) => sum + Number(digit), 0);
+}
+
+export function factorialIterative_413(n) {
+  if (n < 0) return null;
+  let result = 1;
+  for (let i = 2; i <= n; i++) result *= i;
+  return result;
+}
+
+export function isPrime_414(n) {
+  if (n <= 1) return false;
+  if (n <= 3) return true;
+  if (n % 2 === 0 || n % 3 === 0) return false;
+  for (let i = 5; i * i <= n; i += 6) {
+    if (n % i === 0 || n % (i + 2) === 0) return false;
+  }
+  return true;
+}
+
+export function gcd_415(a, b) {
+  if (!b) return a;
+  return gcd_415(b, a % b);
+}
+
+export function lcm_416(a, b) {
+  return (a * b) / gcd_415(a, b);
+}
+
+export function randomHexColor_417() {
+  return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+}
+
+export function reverseString_418(str) {
+  return str.split('').reverse().join('');
+}
+
+export function countWords_419(str) {
+  return str.trim().split(/\s+/).length;
+}
+
+export function isAnagram_420(str1, str2) {
+  const normalize = str =>
+    str
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, '')
+      .split('')
+      .sort()
+      .join('');
+  return normalize(str1) === normalize(str2);
+}
+
+export function xorArrays_421(arr1, arr2) {
+  const setA = new Set(arr1);
+  const setB = new Set(arr2);
+  return [...arr1.filter(x => !setB.has(x)), ...arr2.filter(x => !setA.has(x))];
+}
+
+export function repeatString_422(str, times) {
+  return str.repeat(times);
+}
+
+export function isValidEmail_423(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+export function capitalizeEveryWord_424(str) {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+export function removeFalsy_425(arr) {
+  return arr.filter(Boolean);
+}
+
+export function uniqueElements_426(arr) {
+  return [...new Set(arr)];
+}
+
+export function flattenOnce_427(arr) {
+  return [].concat(...arr);
+}
+
+export function objectToQueryString_428(obj) {
+  return Object.entries(obj)
+    .map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
+    .join('&');
+}
+
+export function queryStringToObject_429(query) {
+  return query
+    .replace(/^\?/, '')
+    .split('&')
+    .reduce((acc, pair) => {
+      const [key, val] = pair.split('=');
+      acc[decodeURIComponent(key)] = decodeURIComponent(val || '');
+      return acc;
+    }, {});
+}
+
+export function randomChoiceWeighted_430(arr, weights) {
+  const total = weights.reduce((a, b) => a + b, 0);
+  let rand = Math.random() * total;
+  for (let i = 0; i < arr.length; i++) {
+    if (rand < weights[i]) return arr[i];
+    rand -= weights[i];
+  }
+}
+
+export function difference_431(arr1, arr2) {
+  const set2 = new Set(arr2);
+  return arr1.filter(x => !set2.has(x));
+}
+
+export function symmetricDifference_432(arr1, arr2) {
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+  return [...arr1.filter(x => !set2.has(x)), ...arr2.filter(x => !set1.has(x))];
+}
+
+export function binarySearch_433(arr, target) {
+  let left = 0,
+    right = arr.length - 1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return mid;
+    else if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return -1;
+}
+
+export function flattenObject_434(obj, prefix = '') {
+  return Object.keys(obj).reduce((acc, k) => {
+    const pre = prefix.length ? prefix + '.' : '';
+    if (typeof obj[k] === 'object' && obj[k] !== null) {
+      Object.assign(acc, flattenObject_434(obj[k], pre + k));
+    } else {
+      acc[pre + k] = obj[k];
+    }
+    return acc;
+  }, {});
+}
+
+export function unflattenObject_435(data) {
+  const result = {};
+  for (const i in data) {
+    const keys = i.split('.');
+    keys.reduce((r, e, j) => {
+      return (
+        r[e] ||
+        (r[e] = isNaN(Number(keys[j + 1]))
+          ? keys.length - 1 === j
+            ? data[i]
+            : {}
+          : [])
+      );
+    }, result);
+  }
+  return result;
+}
+
+export function isValidURL_436(str) {
+  try {
+    new URL(str);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function rgbToHsl_437(r, g, b) {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b),
+    min = Math.min(r, g, b);
+  let h,
+    s,
+    l = (max + min) / 2;
+  if (max === min) {
+    h = s = 0; // achromatic
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+  return [h * 360, s * 100, l * 100];
+}
+
+export function hslToRgb_438(h, s, l) {
+  h /= 360;
+  s /= 100;
+  l /= 100;
+  let r, g, b;
+
+  if (s === 0) {
+    r = g = b = l; // achromatic
+  } else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+export function capitalizeEachWord_439(str) {
+  return str.replace(/\b\w/g, l => l.toUpperCase());
+}
+
+export function generateUUID_440() {
+  let d = new Date().getTime();
+  if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+    d += performance.now(); // use high-precision timer if available
+  }
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+  });
+}
+
+export function getRandomInt_441(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function chunkString_442(str, size) {
+  const chunks = [];
+  for (let i = 0; i < str.length; i += size) {
+    chunks.push(str.slice(i, i + size));
+  }
+  return chunks;
+}
+
+export function reverseArray_443(arr) {
+  return arr.slice().reverse();
+}
+
+export function flattenDepth_444(arr, depth = 1) {
+  return depth > 0
+    ? arr.reduce(
+        (acc, val) =>
+          acc.concat(Array.isArray(val) ? flattenDepth_444(val, depth - 1) : val),
+        []
+      )
+    : arr.slice();
+}
+
+export function removeByIndex_445(arr, index) {
+  return arr.slice(0, index).concat(arr.slice(index + 1));
+}
+
+export function randomBoolean_446() {
+  return Math.random() >= 0.5;
+}
+
+export function getRandomElement_447(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function mapValues_448(obj, fn) {
+  return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fn(v, k)]));
+}
+
+export function omitBy_449(obj, predicate) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k, v]) => !predicate(v, k))
+  );
+}
+
+export function pickBy_450(obj, predicate) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([k, v]) => predicate(v, k))
+  );
+}
