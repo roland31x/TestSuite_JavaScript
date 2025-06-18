@@ -1558,3 +1558,337 @@ export function arrayMove_249(arr, fromIndex, toIndex) {
 export function omitBy_250(obj, predicate) {
   return Object.fromEntries(Object.entries(obj).filter(([k, v]) => !predicate(v, k)));
 }
+
+export function debounce_251(fn, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+export function throttle_252(fn, wait) {
+  let isThrottled = false;
+  let savedArgs, savedThis;
+
+  function wrapper() {
+    if (isThrottled) {
+      savedArgs = arguments;
+      savedThis = this;
+      return;
+    }
+
+    fn.apply(this, arguments);
+
+    isThrottled = true;
+
+    setTimeout(() => {
+      isThrottled = false;
+      if (savedArgs) {
+        wrapper.apply(savedThis, savedArgs);
+        savedArgs = savedThis = null;
+      }
+    }, wait);
+  }
+
+  return wrapper;
+}
+
+export function curry_253(fn) {
+  return function curried(...args) {
+    if (args.length >= fn.length) {
+      return fn.apply(this, args);
+    } else {
+      return function (...next) {
+        return curried.apply(this, args.concat(next));
+      };
+    }
+  };
+}
+
+export function unzip_254(arrays) {
+  if (!arrays.length) return [];
+  const length = Math.max(...arrays.map(arr => arr.length));
+  const result = [];
+  for (let i = 0; i < length; i++) {
+    result.push(arrays.map(arr => arr[i]));
+  }
+  return result;
+}
+
+export function capitalizeWords_255(str) {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+export function camelToKebab_256(str) {
+  return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+export function kebabToCamel_257(str) {
+  return str.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
+}
+
+export function sleep_258(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function last_259(arr) {
+  return arr[arr.length - 1];
+}
+
+export function first_260(arr) {
+  return arr[0];
+}
+
+export function isSorted_261(arr, compareFn = (a, b) => a - b) {
+  for (let i = 1; i < arr.length; i++) {
+    if (compareFn(arr[i - 1], arr[i]) > 0) return false;
+  }
+  return true;
+}
+
+export function range_262(start, end) {
+  const length = end - start + 1;
+  return Array.from({ length }, (_, i) => i + start);
+}
+
+export function repeatString_263(str, times) {
+  return new Array(times + 1).join(str);
+}
+
+export function objectMap_264(obj, fn) {
+  return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, fn(v, k)]));
+}
+
+export function objectFilter_265(obj, predicate) {
+  return Object.fromEntries(Object.entries(obj).filter(([k, v]) => predicate(v, k)));
+}
+
+export function groupBy_266(arr, keyFn) {
+  return arr.reduce((acc, item) => {
+    const key = keyFn(item);
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {});
+}
+
+export function invertObject_267(obj) {
+  return Object.fromEntries(Object.entries(obj).map(([k, v]) => [v, k]));
+}
+
+export function arrayToObject_268(arr, keyFn) {
+  return arr.reduce((acc, item) => {
+    acc[keyFn(item)] = item;
+    return acc;
+  }, {});
+}
+
+export function chunkArray_269(arr, size) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+
+export function flattenArray_270(arr) {
+  return arr.reduce((flat, toFlatten) => flat.concat(toFlatten), []);
+}
+
+export function pick_271(obj, keys) {
+  return keys.reduce((acc, key) => {
+    if (key in obj) acc[key] = obj[key];
+    return acc;
+  }, {});
+}
+
+export function omit_272(obj, keys) {
+  return Object.fromEntries(Object.entries(obj).filter(([k]) => !keys.includes(k)));
+}
+
+export function difference_273(arr1, arr2) {
+  const set2 = new Set(arr2);
+  return arr1.filter(x => !set2.has(x));
+}
+
+export function intersection_274(arr1, arr2) {
+  const set2 = new Set(arr2);
+  return arr1.filter(x => set2.has(x));
+}
+
+export function union_275(arr1, arr2) {
+  return Array.from(new Set([...arr1, ...arr2]));
+}
+
+export function symmetricDifference_276(arr1, arr2) {
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+  return [...arr1.filter(x => !set2.has(x)), ...arr2.filter(x => !set1.has(x))];
+}
+
+export function zip_277(...arrays) {
+  const minLen = Math.min(...arrays.map(arr => arr.length));
+  const zipped = [];
+  for (let i = 0; i < minLen; i++) {
+    zipped.push(arrays.map(arr => arr[i]));
+  }
+  return zipped;
+}
+
+export function unzip_278(arrays) {
+  const length = arrays[0]?.length || 0;
+  const result = Array.from({ length }, () => []);
+  arrays.forEach(arr => arr.forEach((val, i) => result[i].push(val)));
+  return result;
+}
+
+export function toQueryString_279(obj) {
+  return Object.entries(obj)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join('&');
+}
+
+export function fromQueryString_280(qs) {
+  return qs
+    .replace(/^\?/, '')
+    .split('&')
+    .reduce((acc, pair) => {
+      const [k, v] = pair.split('=');
+      acc[decodeURIComponent(k)] = decodeURIComponent(v || '');
+      return acc;
+    }, {});
+}
+
+export function deepMerge_281(target, source) {
+  for (const key in source) {
+    if (source[key] instanceof Object && key in target) {
+      Object.assign(source[key], deepMerge(target[key], source[key]));
+    }
+  }
+  Object.assign(target || {}, source);
+  return target;
+}
+
+export function randomInt_282(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+export function shuffle_283(array) {
+  let currentIndex = array.length, randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
+export function average_284(numbers) {
+  return numbers.reduce((a, b) => a + b, 0) / numbers.length;
+}
+
+export function median_285(numbers) {
+  const sorted = [...numbers].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0
+    ? sorted[mid]
+    : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+export function mode_286(numbers) {
+  const freq = {};
+  let maxFreq = 0;
+  let modes = [];
+
+  numbers.forEach(num => {
+    freq[num] = (freq[num] || 0) + 1;
+    if (freq[num] > maxFreq) {
+      maxFreq = freq[num];
+      modes = [num];
+    } else if (freq[num] === maxFreq) {
+      modes.push(num);
+    }
+  });
+
+  return modes;
+}
+
+export function clamp_287(num, min, max) {
+  return Math.min(Math.max(num, min), max);
+}
+
+export function factorial_288(n) {
+  if (n < 0) return undefined;
+  if (n === 0) return 1;
+  return n * factorial_288(n - 1);
+}
+
+export function fibonacci_289(n) {
+  if (n <= 1) return n;
+  return fibonacci_289(n - 1) + fibonacci_289(n - 2);
+}
+
+export function flattenDeep_290(arr) {
+  return arr.reduce(
+    (acc, val) => (Array.isArray(val) ? acc.concat(flattenDeep_290(val)) : acc.concat(val)),
+    []
+  );
+}
+
+export function debounceImmediate_291(fn, wait) {
+  let timeout;
+  return function(...args) {
+    const callNow = !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => (timeout = null), wait);
+    if (callNow) fn.apply(this, args);
+  };
+}
+
+export function once_292(fn) {
+  let called = false;
+  let result;
+  return function(...args) {
+    if (!called) {
+      called = true;
+      result = fn.apply(this, args);
+    }
+    return result;
+  };
+}
+
+export function pipe_293(...fns) {
+  return x => fns.reduce((v, f) => f(v), x);
+}
+
+export function compose_294(...fns) {
+  return x => fns.reduceRight((v, f) => f(v), x);
+}
+
+export function isObject_295(value) {
+  return value && typeof value === 'object' && !Array.isArray(value);
+}
+
+export function isFunction_296(value) {
+  return typeof value === 'function';
+}
+
+export function isArray_297(value) {
+  return Array.isArray(value);
+}
+
+export function isString_298(value) {
+  return typeof value === 'string';
+}
+
+export function isNumber_299(value) {
+  return typeof value === 'number' && !isNaN(value);
+}
+
+export function isBoolean_300(value) {
+  return typeof value === 'boolean';
+}
