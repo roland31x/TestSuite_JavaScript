@@ -1,53 +1,63 @@
-export function randomString(length = 10) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++)
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    return result;
+export function isPrime(num) {
+    if (num < 2) return false;
+    for(let i = 2; i <= Math.sqrt(num); i++) {
+        if(num % i === 0) return false;
+    }
+    return true;
 }
 
-export function factorial(n) {
-    if (n === 0) return 1;
-    return n * factorial(n - 1);
-}
-
-export function isPalindrome(str) {
-    str = str.toLowerCase().replace(/\s+/g, '');
-    return str === str.split('').reverse().join('');
-}
-
-export function uniqueElements(arr) {
-    return [...new Set(arr)];
-}
-
-export function flattenArray(arr) {
-    return arr.reduce((acc, val) => acc.concat(val), []);
-}
-
-export function fibonacci(n) {
-    let a = 0, b = 1;
-    for(let i = 0; i < n; i++) {
-        [a, b] = [b, a + b];
+export function gcd(a, b) {
+    while(b) {
+        [a, b] = [b, a % b];
     }
     return a;
 }
 
-export function countVowels(str) {
-    return (str.match(/[aeiou]/gi) || []).length;
+export function lcm(a, b) {
+    return (a * b) / gcd(a, b);
 }
 
-export function mergeObjects(...objs) {
-    return Object.assign({}, ...objs);
+export function flattenObject(obj, prefix = '') {
+    return Object.keys(obj).reduce((acc, k) => {
+        const pre = prefix.length ? prefix + '.' : '';
+        if(typeof obj[k] === 'object' && obj[k] !== null) {
+            Object.assign(acc, flattenObject(obj[k], pre + k));
+        } else {
+            acc[pre + k] = obj[k];
+        }
+        return acc;
+    }, {});
 }
 
-export function reverseWords(sentence) {
-    return sentence.split(' ').map(w => w.split('').reverse().join('')).join(' ');
-}
-
-export function chunkArray(arr, size) {
-    const result = [];
-    for(let i = 0; i < arr.length; i += size) {
-        result.push(arr.slice(i, i + size));
+export function mostCommon(arr) {
+    const freq = {};
+    let max = 0, result = null;
+    for(const item of arr) {
+        freq[item] = (freq[item] || 0) + 1;
+        if(freq[item] > max) {
+            max = freq[item];
+            result = item;
+        }
     }
     return result;
+}
+
+export function transpose(matrix) {
+    return matrix[0].map((_, i) => matrix.map(row => row[i]));
+}
+
+export function camelToSnake(str) {
+    return str.replace(/([A-Z])/g, letter => `_${letter.toLowerCase()}`);
+}
+
+export function swapCase(str) {
+    return str.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
+}
+
+export function nestedSum(arr) {
+    return arr.reduce((acc, val) => Array.isArray(val) ? acc + nestedSum(val) : acc + val, 0);
+}
+
+export function digitSum(num) {
+    return Math.abs(num).toString().split('').reduce((a,b) => a + +b, 0);
 }
